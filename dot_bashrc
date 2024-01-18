@@ -117,6 +117,9 @@ if ! shopt -oq posix; then
   fi
 fi
 
+alias bat='batcat'
+alias ..='cd ..'
+
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH=$BUN_INSTALL/bin:$PATH

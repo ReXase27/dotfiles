@@ -22,7 +22,6 @@ require('lazy').setup({
     'tpope/vim-rhubarb',
     'tpope/vim-sleuth',
     'folke/neoconf.nvim',
-
     {
         "zbirenbaum/copilot.lua",
         cmd = "Copilot",
@@ -31,7 +30,7 @@ require('lazy').setup({
             require("copilot").setup({
                 suggestion = {
                     enabled = true,
-                    auto_trigger = false,
+                    auto_trigger = true,
                     debounce = 75,
                     keymap = {
                         accept = "<C-a>",

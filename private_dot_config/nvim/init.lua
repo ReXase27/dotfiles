@@ -21,6 +21,7 @@ require('lazy').setup({
     'tpope/vim-fugitive',
     'tpope/vim-rhubarb',
     'tpope/vim-sleuth',
+    'folke/neoconf.nvim',
 
     {
         "zbirenbaum/copilot.lua",
@@ -52,7 +53,6 @@ require('lazy').setup({
 
             { 'j-hui/fidget.nvim',       opts = {} },
 
-            -- Additional lua configuration, makes nvim stuff amazing!
             'folke/neodev.nvim',
         },
     },
@@ -184,11 +184,39 @@ require('lazy').setup({
     },
 
     {
+        "nvim-telescope/telescope-file-browser.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+    },
+
+
+    {
         'nvim-treesitter/nvim-treesitter',
         dependencies = {
             'nvim-treesitter/nvim-treesitter-textobjects',
         },
         build = ':TSUpdate',
+    },
+
+    {
+        'nvim-java/nvim-java',
+        dependencies = {
+            'nvim-java/lua-async-await',
+            'nvim-java/nvim-java-core',
+            'nvim-java/nvim-java-test',
+            'nvim-java/nvim-java-dap',
+            'MunifTanjim/nui.nvim',
+            'neovim/nvim-lspconfig',
+            'mfussenegger/nvim-dap',
+            {
+                'williamboman/mason.nvim',
+                opts = {
+                    registries = {
+                        'github:nvim-java/mason-registry',
+                        'github:mason-org/mason-registry',
+                    },
+                },
+            }
+        },
     },
 
     -- autoformat
@@ -245,6 +273,65 @@ require('lazy').setup({
                     })
                 end,
             })
+        end,
+    },
+
+    -- debug
+    {
+        'mfussenegger/nvim-dap',
+        dependencies = {
+            'rcarriga/nvim-dap-ui',
+
+            'williamboman/mason.nvim',
+            'jay-babu/mason-nvim-dap.nvim',
+
+            'leoluz/nvim-dap-go',
+        },
+        config = function()
+            local dap = require 'dap'
+            local dapui = require 'dapui'
+
+            require('mason-nvim-dap').setup {
+                automatic_setup = true,
+                handlers = {},
+                ensure_installed = {
+                    'delve',
+                },
+            }
+
+            vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
+            vim.keymap.set('n', '<F1>', dap.step_into, { desc = 'Debug: Step Into' })
+            vim.keymap.set('n', '<F2>', dap.step_over, { desc = 'Debug: Step Over' })
+            vim.keymap.set('n', '<F3>', dap.step_out, { desc = 'Debug: Step Out' })
+            vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'Debug: Toggle Breakpoint' })
+            vim.keymap.set('n', '<leader>B', function()
+                dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+            end, { desc = 'Debug: Set Breakpoint' })
+
+            dapui.setup {
+                icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
+                controls = {
+                    icons = {
+                        pause = '⏸',
+                        play = '▶',
+                        step_into = '⏎',
+                        step_over = '⏭',
+                        step_out = '⏮',
+                        step_back = 'b',
+                        run_last = '▶▶',
+                        terminate = '⏹',
+                        disconnect = '⏏',
+                    },
+                },
+            }
+
+            vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: See last session result.' })
+
+            dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+            dap.listeners.before.event_terminated['dapui_config'] = dapui.close
+            dap.listeners.before.event_exited['dapui_config'] = dapui.close
+
+            require('dap-go').setup()
         end,
     },
 }, {})
@@ -380,6 +467,7 @@ vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc
 vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+vim.keymap.set('n', '<leader>fb', ":Telescope file_browser<CR>", { desc = '[S]earch [R]esume' })
 
 vim.defer_fn(function()
     require('nvim-treesitter.configs').setup {
@@ -446,7 +534,6 @@ vim.defer_fn(function()
     }
 end, 0)
 
-
 local on_attach = function(_, bufnr)
     local nmap = function(keys, func, desc)
         if desc then
@@ -479,8 +566,10 @@ local on_attach = function(_, bufnr)
 end
 
 require('neodev').setup()
+require('neodev').setup()
+require('java').setup()
 
-local servers = { 'jdtls' }
+local servers = { 'rust-analyzer', 'jdtls' }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)

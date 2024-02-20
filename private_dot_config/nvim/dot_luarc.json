@@ -4,5 +4,8 @@
     "hint.enable": false,
     "format": {
         "enable": true
-    }
+    },
+    "diagnostics.globals": [
+        "vim"
+    ]
 }

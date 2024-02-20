@@ -10,9 +10,13 @@ indent_size = 4
 # if indent_style is tab, this is valid
 tab_width = 4
 # none/single/double
-quote_style = none
+quote_style = double
 
 continuation_indent = 4
+## extend option
+# continuation_indent.before_block = 4
+# continuation_indent.in_expr = 4
+# continuation_indent.in_table = 4
 
 # this mean utf8 length , if this is 'unset' then the line width is no longer checked
 # this option decides when to chopdown the code
@@ -20,7 +24,7 @@ max_line_length = 120
 
 # optional crlf/lf/cr/auto, if it is 'auto', in windows it is crlf other platforms are lf
 # in neovim the value 'auto' is not a valid option, please use 'unset' 
-end_of_line = auto
+end_of_line = unset
 
 #  none/ comma / semicolon / only_kv_colon
 table_separator_style = none
@@ -29,7 +33,7 @@ table_separator_style = none
 trailing_table_separator = keep
 
 # keep/remove/remove_table_only/remove_string_only
-call_arg_parentheses = keep
+call_arg_parentheses = remove_table_only
 
 detect_end_of_line = false
 
@@ -50,6 +54,11 @@ space_before_closure_open_parenthesis = true
 # optional always/only_string/only_table/none
 # or true/false
 space_before_function_call_single_arg = always
+## extend option
+## always/keep/none
+# space_before_function_call_single_arg.table = always
+## always/keep/none
+# space_before_function_call_single_arg.string = always
 
 space_before_open_square_bracket = false
 
@@ -64,6 +73,7 @@ space_around_table_append_operator = false
 
 ignore_spaces_inside_function_call = false
 
+# detail number or 'keep'
 space_before_inline_comment = 1
 
 # [operator space]

@@ -19,6 +19,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 vim.o.background = "dark"
 vim.cmd("colorscheme gruvbox")
 
+vim.api.nvim_create_autocmd("BufWritePre", {
+    group = rex_group,
+    callback = function ()
+        vim.cmd("silent! %s/\\s\\+$//e")
+    end,
+    pattern = "*",
+})
+
 vim.api.nvim_create_autocmd("LspAttach", {
     group = rex_group,
     callback = function (e)

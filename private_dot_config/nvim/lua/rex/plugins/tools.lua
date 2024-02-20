@@ -1,7 +1,6 @@
 return {
     "tpope/vim-sleuth",
     "folke/neoconf.nvim",
-    "folke/neodev.nvim",
     { "folke/which-key.nvim",  opts = {} },
     {
         "nvim-lualine/lualine.nvim",
@@ -28,6 +27,27 @@ return {
     },
 
     { "numToStr/Comment.nvim", opts = {} },
+
+    {
+        "zbirenbaum/copilot.lua",
+        cmd = "Copilot",
+        event = "InsertEnter",
+        config = function ()
+            require("copilot").setup {
+                suggestion = {
+                    enabled = true,
+                    auto_trigger = true,
+                    debounce = 75,
+                    keymap = {
+                        accept = "<C-a>",
+                        next = "<C-n>",
+                        prev = "<C-p>",
+                        dismiss = "<C-c>",
+                    },
+                },
+            }
+        end,
+    },
 
     -- languages & libraries
     {

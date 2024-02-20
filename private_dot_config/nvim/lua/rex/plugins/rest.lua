@@ -32,5 +32,9 @@ return {
             yank_dry_run = true,
             search_back = true,
         }
+
+        vim.api.nvim_set_keymap("n", "<leader>rr", "<Plug>RestNvim", { noremap = true, silent = true })
+        vim.api.nvim_set_keymap("n", "<leader>rp", "<Plug>RestNvimPreview", { noremap = true, silent = true })
+        vim.api.nvim_set_keymap("n", "<leader>rl", "<Plug>RestNvimLast", { noremap = true, silent = true })
     end
 }

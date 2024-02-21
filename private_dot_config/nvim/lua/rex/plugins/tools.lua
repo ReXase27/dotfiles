@@ -58,7 +58,11 @@ return {
                 "neovim/nvim-lspconfig",
             },
             config = function ()
-                require("go").setup()
+                require("go").setup {
+                    icons = false,
+                    dap_debug_keymap = false,
+                    dap_debug_gui = false,
+                }
             end,
             event = { "CmdlineEnter" },
             ft = { "go", "gomod" },

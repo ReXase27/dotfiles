@@ -2,7 +2,7 @@ return {
     "mfussenegger/nvim-dap",
     dependencies = {
         "rcarriga/nvim-dap-ui",
-
+        "theHamsta/nvim-dap-virtual-text",
         "williamboman/mason.nvim",
         "jay-babu/mason-nvim-dap.nvim",
 
@@ -19,6 +19,8 @@ return {
             ensure_installed = {
             },
         }
+
+        require("nvim-dap-virtual-text").setup {}
 
         vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
         vim.keymap.set("n", "<F1>", dap.step_into, { desc = "Debug: Step Into" })

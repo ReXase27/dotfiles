@@ -52,6 +52,7 @@ return {
         local lspconfig = require("lspconfig")
 
         lspconfig.dartls.setup {}
+        lspconfig.sourcekit.setup {}
 
         local format_is_enabled = true
         vim.api.nvim_create_user_command("ToggleFormatOnSave", function ()

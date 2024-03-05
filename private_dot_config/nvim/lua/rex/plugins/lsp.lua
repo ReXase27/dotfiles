@@ -1,10 +1,10 @@
 return {
     "neovim/nvim-lspconfig",
     dependencies = {
-        { "williamboman/mason.nvim", config = true },
+        "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
         { "j-hui/fidget.nvim", opts = {} },
-        "folke/neodev.nvim",
+        { "folke/neodev.nvim", opts = {} },
         -- dart & flutter
         {
             "akinsho/flutter-tools.nvim",
@@ -17,11 +17,6 @@ return {
         },
     },
     config = function()
-        require("fidget").setup({})
-        require("neodev").setup({})
-        require("mason").setup({})
-        require("mason-lspconfig").setup({})
-
         vim.api.nvim_create_autocmd("LspAttach", {
             group = vim.api.nvim_create_augroup("neovim-lsp-attach", { clear = true }),
             callback = function(event)
@@ -63,6 +58,7 @@ return {
         local capabilities = vim.lsp.protocol.make_client_capabilities()
         capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
+        require("mason").setup()
         require("mason-lspconfig").setup({
             handlers = {
                 function(server_name)
@@ -72,5 +68,11 @@ return {
                 end,
             },
         })
+
+        -- manual
+        local lsp_config = require("lspconfig")
+
+        lsp_config.rust_analyzer.setup({})
+        lsp_config.gopls.setup({})
     end,
 }

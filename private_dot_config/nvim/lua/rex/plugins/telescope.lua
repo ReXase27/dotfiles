@@ -1,7 +1,7 @@
 return {
     {
         "nvim-telescope/telescope.nvim",
-        event = "VeryLazy",
+        event = "VimEnter",
         branch = "0.1.x",
         dependencies = {
             "nvim-lua/plenary.nvim",
@@ -17,17 +17,9 @@ return {
         },
         config = function()
             require("telescope").setup({
-                defaults = {
-                    mappings = {
-                        i = {
-                            ["<C-u>"] = false,
-                            ["<C-d>"] = false,
-                        },
-                    },
-                    extensions = {
-                        ["ui-select"] = {
-                            require("telescope.themes").get_dropdown(),
-                        },
+                extensions = {
+                    ["ui-select"] = {
+                        require("telescope.themes").get_dropdown(),
                     },
                 },
             })
@@ -65,9 +57,5 @@ return {
                 builtin.find_files({ cwd = vim.fn.stdpath("config") })
             end, { desc = "[S]earch [N]eovim files" })
         end,
-    },
-    {
-        "nvim-telescope/telescope-file-browser.nvim",
-        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
     },
 }

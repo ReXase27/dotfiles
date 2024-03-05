@@ -1,22 +1,32 @@
 return {
     "tpope/vim-sleuth",
     "folke/neoconf.nvim",
-    { "folke/which-key.nvim", opts = {} },
-
-    {
-        "windwp/nvim-autopairs",
-        event = "InsertEnter",
-        opts = {},
-    },
-
-    {
-        "lukas-reineke/indent-blankline.nvim",
-        main = "ibl",
-        opts = {},
-    },
-
     { "numToStr/Comment.nvim", opts = {} },
-
+    {
+        "lewis6991/gitsigns.nvim",
+        opts = {
+            signs = {
+                add = { text = "+" },
+                change = { text = "~" },
+                delete = { text = "_" },
+                topdelete = { text = "‾" },
+                changedelete = { text = "~" },
+            },
+        },
+    },
+    {
+        "folke/which-key.nvim",
+        even = "VimEnter",
+        config = function()
+            require("which-key").setup({})
+        end,
+    },
+    {
+        "folke/todo-comments.nvim",
+        event = "VimEnter",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        opts = { signs = false },
+    },
     {
         "echasnovski/mini.nvim",
         config = function()
@@ -27,7 +37,6 @@ return {
             statusline.setup()
         end,
     },
-
     {
         "https://github.com/apple/pkl-neovim",
         lazy = true,
@@ -39,7 +48,6 @@ return {
             vim.cmd("TSInstall! pkl")
         end,
     },
-
     {
         "saecki/crates.nvim",
         config = function()

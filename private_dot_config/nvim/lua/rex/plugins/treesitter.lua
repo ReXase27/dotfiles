@@ -4,11 +4,10 @@ return {
         "nvim-treesitter/nvim-treesitter-textobjects",
     },
     build = ":TSUpdate",
-    config = function ()
-        vim.defer_fn(function ()
-            require("nvim-treesitter.configs").setup {
+    config = function()
+        vim.defer_fn(function()
+            require("nvim-treesitter.configs").setup({
                 ensure_installed = { "lua" },
-
                 auto_install = false,
                 sync_install = false,
                 ignore_install = {},
@@ -67,9 +66,9 @@ return {
                         },
                     },
                 },
-            }
+            })
         end, 0)
 
-        vim.filetype.add { extension = { templ = "templ" } }
-    end
+        vim.filetype.add({ extension = { templ = "templ" } })
+    end,
 }

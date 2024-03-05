@@ -3,56 +3,74 @@ return {
     dependencies = {
         { "williamboman/mason.nvim", config = true },
         "williamboman/mason-lspconfig.nvim",
-        { "j-hui/fidget.nvim",       opts = {} },
+        { "j-hui/fidget.nvim", opts = {} },
         "folke/neodev.nvim",
+        -- dart & flutter
+        {
+            "akinsho/flutter-tools.nvim",
+            lazy = false,
+            dependencies = {
+                "nvim-lua/plenary.nvim",
+                "stevearc/dressing.nvim",
+            },
+            config = true,
+        },
     },
-    config = function ()
-        require("mason").setup {}
-        require("mason-lspconfig").setup {}
-        require("fidget").setup {}
-        require("neodev").setup {}
+    config = function()
+        require("fidget").setup({})
+        require("neodev").setup({})
+        require("mason").setup({})
+        require("mason-lspconfig").setup({})
+
+        vim.api.nvim_create_autocmd("LspAttach", {
+            group = vim.api.nvim_create_augroup("neovim-lsp-attach", { clear = true }),
+            callback = function(event)
+                local map = function(keys, func, desc)
+                    vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+                end
+
+                map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+                map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+                map("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
+                map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
+                map("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
+                map("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
+                map("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
+                map("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
+                map("K", vim.lsp.buf.hover, "Hover Documentation")
+                map("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
+                map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+                map("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
+                map("<leader>wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
+                map("<leader>wl", function()
+                    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+                end, "[W]orkspace [L]ist Folders")
+                local client = vim.lsp.get_client_by_id(event.data.client_id)
+                if client and client.server_capabilities.documentHighlightProvider then
+                    vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+                        buffer = event.buf,
+                        callback = vim.lsp.buf.document_highlight,
+                    })
+
+                    vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+                        buffer = event.buf,
+                        callback = vim.lsp.buf.clear_references,
+                    })
+                end
+            end,
+        })
 
         local capabilities = vim.lsp.protocol.make_client_capabilities()
-        capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+        capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
-        require("mason-lspconfig").setup {
-            ensure_installed = { "lua_ls", "gopls" },
+        require("mason-lspconfig").setup({
             handlers = {
-                function (server_name)
-                    require("lspconfig")[server_name].setup {
-                        capabilities = capabilities,
-                    }
+                function(server_name)
+                    local server = require("lspconfig")[server_name] or {}
+                    server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+                    require("lspconfig")[server_name].setup(server)
                 end,
-
-                ["lua_ls"] = function ()
-                    local lspconfig = require("lspconfig")
-                    lspconfig.lua_ls.setup {
-                        capabilities = capabilities,
-                        settings = {
-                            Lua = {
-                                diagnostics = {
-                                    globals = { "vim" },
-                                }
-                            }
-                        }
-                    }
-                end,
-
-                ["gopls"] = function ()
-                    require("lspconfig").gopls.setup {
-                        -- gopls_cmd = { vim.fn.stdpath "data", "mason" },
-                        fillstruct = "gopls",
-                        dap_debug = true,
-                        dap_debug_gui = true
-                    }
-                end,
-            }
-        }
-
-        local lspconfig = require("lspconfig")
-
-        lspconfig.dartls.setup {}
-        lspconfig.sourcekit.setup {}
-        lspconfig.mojo.setup {}
-    end
+            },
+        })
+    end,
 }

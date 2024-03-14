@@ -7,5 +7,6 @@ Dotfiles for:
 - Bash
 - Alacritty
 - Helix
+- Fish
 
 These dotfiles are managed using [chezmoi](https://github.com/twpayne/chezmoi)

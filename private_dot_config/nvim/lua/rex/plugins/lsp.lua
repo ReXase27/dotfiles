@@ -73,6 +73,10 @@ return {
         local lsp_config = require("lspconfig")
 
         lsp_config.rust_analyzer.setup {}
+        lsp_config.sourcekit.setup {}
+        lsp_config.clangd.setup {
+            cmd = { "clangd", "--offset-encoding=utf-16" }, }
+        lsp_config.neocmake.setup {}
         lsp_config.gopls.setup {
             settings = {
                 gopls = {

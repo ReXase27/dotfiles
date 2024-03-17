@@ -15,12 +15,16 @@ return {
             },
             config = true,
         },
+        {
+            "stevearc/conform.nvim",
+        },
     },
-    config = function ()
+
+    config = function()
         vim.api.nvim_create_autocmd("LspAttach", {
             group = vim.api.nvim_create_augroup("neovim-lsp-attach", { clear = true }),
-            callback = function (event)
-                local map = function (keys, func, desc)
+            callback = function(event)
+                local map = function(keys, func, desc)
                     vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
                 end
 
@@ -37,7 +41,7 @@ return {
                 map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
                 map("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
                 map("<leader>wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
-                map("<leader>wl", function ()
+                map("<leader>wl", function()
                     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
                 end, "[W]orkspace [L]ist Folders")
                 local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -59,34 +63,34 @@ return {
         capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
         require("mason").setup()
-        require("mason-lspconfig").setup {
+        require("mason-lspconfig").setup({
             handlers = {
-                function (server_name)
+                function(server_name)
                     local server = require("lspconfig")[server_name] or {}
                     server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
                     require("lspconfig")[server_name].setup(server)
                 end,
             },
-        }
+        })
 
-        -- manual
         local lsp_config = require("lspconfig")
 
-        lsp_config.rust_analyzer.setup {}
-        lsp_config.sourcekit.setup {}
-        lsp_config.clangd.setup {
-            cmd = { "clangd", "--offset-encoding=utf-16" }, }
-        lsp_config.neocmake.setup {}
-        lsp_config.gopls.setup {
-            settings = {
-                gopls = {
-                    analyses = {
-                        unusedparams = true,
-                    },
-                    staticcheck = true,
-                    gofumpt = true,
-                },
+        lsp_config.rust_analyzer.setup({})
+        lsp_config.sourcekit.setup({})
+        lsp_config.clangd.setup({
+            cmd = { "clangd", "--offset-encoding=utf-16" },
+        })
+        lsp_config.neocmake.setup({})
+        lsp_config.gopls.setup({})
+
+        -- formatting
+        require("conform").setup({
+            formatters_by_ft = {
+                lua = { "stylua" },
+                swift = { "swift_format" },
             },
-        }
+            notify_on_error = false,
+            format_on_save = { timeout_ms = 500, lsp_fallback = true },
+        })
     end,
 }

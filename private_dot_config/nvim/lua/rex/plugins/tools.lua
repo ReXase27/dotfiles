@@ -15,6 +15,14 @@ return {
         },
     },
     {
+        "kylechui/nvim-surround",
+        version = "*",
+        event = "VeryLazy",
+        config = function()
+            require("nvim-surround").setup({})
+        end,
+    },
+    {
         "folke/which-key.nvim",
         even = "VimEnter",
         config = function()

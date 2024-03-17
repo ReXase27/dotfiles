@@ -1,16 +1,16 @@
 # $HOME/.config/alacritty/alacritty.toml
 
 [window]
-padding.x = 0
+padding.x = 10
 padding.y = 0
 
 [font]
-normal.family = "Berkeley Mono"
-bold.family = "Berkeley Mono"
-italic.family = "Berkeley Mono"
-bold_italic.family = "Berkeley Mono"
+normal.family = "BerkeleyMono Nerd Font"
+bold.family = "BerkeleyMono Nerd Font"
+italic.family = "BerkeleyMono Nerd Font"
+bold_italic.family = "BerkeleyMono Nerd Font"
 
-size = 11.0
+size = 10.0
 
 # Default colors
 [colors.primary]
@@ -40,3 +40,6 @@ blue    = '#83a598'
 magenta = '#d3869b'
 cyan    = '#8ec07c'
 white   = '#ebdbb2'
+
+[shell]
+program = "/usr/bin/fish"
